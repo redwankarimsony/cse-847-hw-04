@@ -1,0 +1,112 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage}
+\usepackage{url}
+\usepackage{color}
+\usepackage{amsmath, amssymb}
+\usepackage{hyperref}
+\usepackage[]{mcode}
+
+\textheight=8.85in
+
+\pagestyle{myheadings}
+
+\setlength{\tabcolsep}{0in}
+\begin{document}
+
+\thispagestyle {empty}
+
+\newcommand{\lsp}[1]{\large\renewcommand{\baselinestretch}{#1}\normalsize}
+\newcommand{\hsp}{\hspace{.2in}}
+\newcommand{\comment}[1]{}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}{Lemma}[section]
+\newtheorem{cor}{Corollary}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{problem}{Problem}[section]
+
+\newcommand{\R}{{\rm\hbox{I\kern-.15em R}}}
+\newcommand{\IR}{{\rm\hbox{I\kern-.15em R}}}
+\newcommand{\IN}{{\rm\hbox{I\kern-.15em N}}}
+\newcommand{\IZ}{{\sf\hbox{Z\kern-.40em Z}}}
+\newcommand{\IS}{{\rm\hbox{S\kern-.45em S}}}
+\newcommand{\Real}{I\!\!R}
+
+
+\newcommand{\linesep}{\vspace{.2cm}\hrule\vspace{0.2cm}}
+\newcommand{\categorysep}{\vspace{0.5cm}}
+\newcommand{\entrysep}{\vspace{0cm}}
+
+\newcommand{\category}[1]{\categorysep
+                  \noindent {\bf \large #1}
+              \linesep}
+
+\pagestyle{empty}
+
+\begin{center}
+{\large \textbf{CSE 847 (Spring 2022): Machine Learning--- Homework 4}} \\
+ Instructor: Jiayu Zhou 
+\end{center}
+
+\section{Logistic Regression: Experiment}
+In this part you will implement logistic regression.  You are to write a
+MATLAB function called logistic\_train.m that takes an input data set, a set of
+binary training labels, and an optional argument that specifies the
+convergence criterion, and returns a set of logistic weights. Specifically the
+function should have the following form:
+\lstinputlisting{logistic_train.m}
+
+The classifier should be trained using the first-order gradient descent 
+procedure described in class OR the Newton-Raphson (IRLS) iterative in the text, 
+using the log-likelihood objective function. You can use either +1/-1 label encoding or +1/0 label encoding, but you will need to process the data to match the label encoding when necessary. You can initialize all the weights at 0. You will test the
+algorithm on the Spam Email data set\footnote{\url{https://github.com/jiayuzhou/CSE847/tree/master/data/spam_email}}. There are 57 features and 2
+class labels. Please read the README before you use this data. All features
+have been converted from counts into binary features (by splitting above and
+below the mean count).
+
+Create a separate test data set consisting of all rows in the file from row
+2001 to 4601 inclusive (and corresponding labels). You now have 2 data sets, a
+training data set with 2000 rows (the first 2000 rows of the original file)
+and a test data set with 2601 rows. Train your logistic regression classifier
+on the first $n$ rows of the training data, $n$ = 200; 500; 800, 1000; 1500, 2000
+and report the accuracy on the test data as a function of $n$.
+
+
+
+\section{Sparse Logistic Regression: Experiment}
+In this part, you will perform experiments using sparse logistic regression
+($\ell_1$-regularized logistic regression). Use the Alzheimer's disease dataset
+as described in \url{https://github.com/jiayuzhou/CSE847/tree/master/data/alzheimers}.
+Sparse logistic regression is then applied
+to train a linear model on the given training set and prediction is then performed
+on the given test set. You should use the implementation in
+SLEP\footnote{\url{https://github.com/jiayuzhou/SLEP/}}, where the sparse
+logistic regression is the function \mcode{LogisticR}\footnote{Located at
+\url{https://github.com/jiayuzhou/SLEP/tree/master/SLEP/functions/L1/L1R}}. An
+example of using the sparse logistic regression is as follows:
+\begin{lstlisting}
+function [w, c] = logistic_l1_train(data, labels, par)
+% OUTPUT w is equivalent to the first d dimension of weights in logistic_train
+%        c is the bias term, equivalent to the last dimension in weights in logistic_train.
+
+% Specify the options (use without modification).
+opts.rFlag = 1;  % range of par within [0, 1].
+opts.tol = 1e-6; % optimization precision
+opts.tFlag = 4;  % termination options. 
+opts.maxIter = 5000; % maximum iterations. 
+ 
+[w, c] = LogisticR(data, labels, par, opts);
+\end{lstlisting}
+
+The input \mcode{par} is the $\ell_1$ regularization parameter, which scales from 0 to
+1. Try different values of regularization parameter and report both the
+AUC (use Matlab code \mcode{perfcurve}) and the number of features selected (number of non-zero entries in
+\mcode{w}). A suggested list of parameters is [0, 0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1], but
+other choices of parameters are also encouraged. Note that when parameter is 0, 
+the formulation is equivalent to the classical logistic regression. 
+
+For both experiments in this homework, submit a brief report. In addition to
+the report, submit the MATLAB code (do add some comments in your code for
+others to understand your code) to a public repository under your Github
+account (the same account of your project) and include the link in the report.
+
+\end{document}
